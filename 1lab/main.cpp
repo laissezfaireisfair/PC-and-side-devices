@@ -1,6 +1,7 @@
 #include <fstream>
 #include <cstdint>
 #include <stdexcept>
+#include <ctime>
 
 namespace pi {
   using usInt = std::uint64_t;
@@ -17,16 +18,31 @@ namespace pi {
   }
 }
 
+class Timer {
+  timespec m_start;
+public:
+  Timer() {
+    clock_gettime(CLOCK_MONOTONIC_RAW, &m_start);
+  }
+  double get_time() const {
+    timespec now;
+    clock_gettime(CLOCK_MONOTONIC_RAW, &now);
+    return now.tv_sec-m_start.tv_sec + 0.000000001*(now.tv_nsec-m_start.tv_nsec);
+  }
+};
+
 int main() {
   std::uint64_t accuracy;
   std::ifstream fin("input.txt");
   fin >> accuracy;
   fin.close();
 
+  Timer timer;
   double const pi = pi::compute(accuracy);
+  double const timeComputing = timer.get_time();
 
   std::ofstream fout("output.txt");
-  fout << pi << std::endl;
+  fout << pi << std::endl << "Time spent: " << timeComputing << std::endl ;
   fout.close();
   return 0;
 }
