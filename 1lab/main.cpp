@@ -5,7 +5,7 @@
 namespace pi {
   using usInt = std::uint64_t;
 
-  double count(std::uint64_t const accuracy) {
+  double compute(std::uint64_t const accuracy) {
     if (accuracy == 0)
       throw std::invalid_argument ("Try to use null accuracy");
     double accumulator = 0;
@@ -23,7 +23,7 @@ int main() {
   fin >> accuracy;
   fin.close();
 
-  double const pi = pi::count(accuracy);
+  double const pi = pi::compute(accuracy);
 
   std::ofstream fout("output.txt");
   fout << pi << std::endl;
